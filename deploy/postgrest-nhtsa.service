@@ -1,0 +1,10 @@
+[Unit]
+Description=PostgREST for NHTSA vPIC
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/postgrest /etc/postgrest/nhtsa.conf
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
