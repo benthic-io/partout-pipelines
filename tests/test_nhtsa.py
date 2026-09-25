@@ -10,8 +10,8 @@ import requests
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from parts_pipelines.config import ApiConfig, ConfigError, load_config
-from parts_pipelines.nhtsa import (
+from partout_pipelines.config import ApiConfig, ConfigError, load_config
+from partout_pipelines.nhtsa import (
     CircuitBreakerOpen,
     DataError,
     NhtsaClient,
@@ -20,7 +20,6 @@ from parts_pipelines.nhtsa import (
     parse_microsoft_timestamp,
     parse_models_csv,
     parse_retry_after,
-    should_stop_manufacturer_pagination,
 )
 
 
@@ -105,12 +104,12 @@ class HttpClientTests(unittest.TestCase):
 
 class ConfigTests(unittest.TestCase):
     def test_shipped_config_meets_rate_and_equipment_requirements(self) -> None:
-        config = load_config(ROOT / "parts.toml")
+        config = load_config(ROOT / "partout.toml")
         self.assertGreaterEqual(config.api.request_interval_seconds, 1.0)
         self.assertEqual(config.api.equipment_types, (1, 3, 13, 16))
 
     def test_rate_override_cannot_go_below_one_second(self) -> None:
-        config = load_config(ROOT / "parts.toml")
+        config = load_config(ROOT / "partout.toml")
         with self.assertRaises(ConfigError):
             config.with_request_interval(0.99)
 
@@ -166,12 +165,6 @@ class EquipmentNormalizationTests(unittest.TestCase):
     def test_requires_stable_dot_code(self) -> None:
         with self.assertRaises(DataError):
             normalize_equipment_plant({"Name": "Missing"}, 1, 2026)
-
-
-class ManufacturerPaginationTests(unittest.TestCase):
-    def test_terminates_only_on_empty_page(self) -> None:
-        self.assertFalse(should_stop_manufacturer_pagination([{"Mfr_ID": 1}]))
-        self.assertTrue(should_stop_manufacturer_pagination([]))
 
 
 class EnvelopeTests(unittest.TestCase):

@@ -457,10 +457,6 @@ def extract_results(payload: Any, context: str) -> list[dict[str, Any]]:
     return results
 
 
-def should_stop_manufacturer_pagination(results: Sequence[Mapping[str, Any]]) -> bool:
-    return len(results) == 0
-
-
 def normalize_equipment_plant(
     record: Mapping[str, Any],
     equipment_type: int,
@@ -2007,7 +2003,3 @@ class NhtsaImporter:
                     dict(zip(progress_columns, row, strict=True)) for row in cursor.fetchall()
                 ]
         return {"runs": runs, "jobs": jobs, "progress": progress}
-
-    def probe(self) -> ProbeResult:
-        url = self._api_url(self.config.api.base_url, "GetAllMakes")
-        return self.client.probe(url)

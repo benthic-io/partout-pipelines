@@ -3,23 +3,37 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "parts-pipelines"
+name = "partout-pipelines"
 version = "0.1.0"
-description = "Resumable NHTSA/vPIC reference importers"
+description = "Resumable NHTSA/vPIC reference-data pipelines"
+readme = "README.md"
 requires-python = ">=3.11"
+license = "MIT"
 dependencies = [
   "psycopg2>=2.9",
   "requests>=2.31",
 ]
 
+[project.urls]
+Homepage = "https://benthic.io/parts/NHTSA/"
+Repository = "https://github.com/benthic-io/partout-pipelines"
+BDP = "https://benthic.io/bdp/"
+
 [project.scripts]
-parts-pipelines = "parts_pipelines.cli:main"
+partout = "partout_pipelines.cli:main"
+parts-pipelines = "partout_pipelines.cli:main"
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+packages = [
+  "partout_pipelines",
+  "pipelines",
+  "pipelines.nhtsa",
+]
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.setuptools.package-dir]
+partout_pipelines = "src/partout_pipelines"
+pipelines = "pipelines"
+"pipelines.nhtsa" = "pipelines/nhtsa"
 
 [tool.ruff]
 target-version = "py311"
